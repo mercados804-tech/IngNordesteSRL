@@ -14,14 +14,16 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
+const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
+
+// Inicializar Firebase solo si se tienen todas las variables de entorno
+const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null;
 
 // Auth (LOGIN)
-export const auth = getAuth(app);
+export const auth = app ? getAuth(app) : null;
 
 // Firestore (BASE DE DATOS)
-export const db = getFirestore(app);
+export const db = app ? getFirestore(app) : null;
 
 // Storage (ARCHIVOS/IMÁGENES)
-export const storage = getStorage(app);
+export const storage = app ? getStorage(app) : null;

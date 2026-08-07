@@ -96,6 +96,8 @@ function App() {
 
   // Fetch content from Firestore (Super robust merge logic)
   useEffect(() => {
+    if (!db) return;
+
     const docRef = doc(db, "content", "landing");
     const unsubscribe = onSnapshot(
       docRef,

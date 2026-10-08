@@ -14,7 +14,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
+export const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
 
 // Inicializar Firebase solo si se tienen todas las variables de entorno
 const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null;

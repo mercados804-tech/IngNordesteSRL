@@ -5,8 +5,8 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const Contacto = ({ content }) => {
-  const whatsappNumber = '376 4373798';
-  const whatsappHref = 'https://wa.me/5493764373798';
+  const whatsappNumber = '+54 9 376 437-9898';
+  const whatsappHref = 'https://wa.me/5493764379898';
   const mapAddress = 'Calle 44 B 8455, Posadas, Misiones';
   const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(mapAddress)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
   const whatsappIcon = (

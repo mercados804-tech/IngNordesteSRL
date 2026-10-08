@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { auth } from '../firebase';
+import { auth, isFirebaseConfigured } from '../firebase';
 import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom';
 import { Lock, Mail, AlertCircle, ArrowLeft, Eye, EyeOff } from 'lucide-react';
@@ -14,6 +14,12 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!isFirebaseConfigured || !auth) {
+      setError('La configuración de Firebase no está disponible. Revisá las variables VITE_FIREBASE_*.');
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         navigate('/admin');
@@ -24,6 +30,11 @@ const Login = () => {
   }, [navigate]);
 
   const handleGoogleLogin = async () => {
+    if (!isFirebaseConfigured || !auth) {
+      setError('Firebase no está configurado. Revisá las variables de entorno.');
+      return;
+    }
+
     setLoading(true);
     setError('');
     sessionStorage.removeItem('isAdmin');
@@ -60,6 +71,12 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (!isFirebaseConfigured || !auth) {
+      setError('Firebase no está configurado. Revisá las variables de entorno.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 

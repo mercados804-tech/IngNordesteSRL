@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { auth, db, storage } from '../firebase';
+import { auth, db, storage, isFirebaseConfigured } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
@@ -33,6 +33,10 @@ const Admin = () => {
 
   const handleFileUpload = async (file, pathPrefix = 'general') => {
     if (!file) return null;
+    if (!isFirebaseConfigured || !storage) {
+      alert('Firebase no está configurado. Revisá las variables de entorno.');
+      return null;
+    }
     setIsUploading(true);
     try {
       const storageRef = ref(storage, `${pathPrefix}/${Date.now()}_${file.name}`);
@@ -111,6 +115,13 @@ const Admin = () => {
   };
 
   useEffect(() => {
+    if (!isFirebaseConfigured || !auth) {
+      setLoading(false);
+      setUser(null);
+      navigate('/login');
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       const isBypass = sessionStorage.getItem('isAdmin') === 'true';
       if (currentUser) {
@@ -129,6 +140,11 @@ const Admin = () => {
   }, [navigate]);
 
   const fetchData = async () => {
+    if (!isFirebaseConfigured || !db || !storage) {
+      console.warn('Firebase no está configurado. No se cargan datos del administrador.');
+      return;
+    }
+
     try {
       const docRef = doc(db, "content", "landing");
       const docSnap = await getDoc(docRef);
